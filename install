@@ -1,6 +1,12 @@
 #!/bin/bash
 
 chmod a+x *.sh
-ln -s /usr/bin *.sh
+SHFILE=`ls *.sh`
+
+for f in $SHFILE;
+do
+    echo "Installing $f..."
+    ln -s $f /usr/bin/$f
+done
 
 
