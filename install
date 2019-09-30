@@ -9,4 +9,4 @@ do
     ln -s `pwd`/$f /usr/bin/$f
 done
 
-
+chmod a+x *.sh
