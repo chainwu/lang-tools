@@ -1,4 +1,4 @@
-#/usr/bin/bash 
+#/bin/bash -x
 
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <dir>"
@@ -9,7 +9,8 @@ ALLWAV=`ls $1/*.wav`
 
 for ii in $ALLWAV;
 do
-    i=${ii//[/]/\\} 
+    i=${ii//\//\\\\}
+    #i=`echo $$i|sed 's/\\/\//g'`
     echo $i
     txtfile=${i::-4}.txt
     txtgrid=${i::-4}.textgrid
