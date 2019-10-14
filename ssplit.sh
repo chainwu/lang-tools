@@ -5,6 +5,13 @@ if [ "$#" -ne 1 ]; then
     exit -1
 fi
 
+fn=$1
+suf="${fn: -4}"
+if [ "$suf" != ".pos" ]; then
+    echo "File suffix is not .pos"
+    exit -1
+fi
+
 nosuffix=`basename $1 .pos`
 awk -v RS="[*]" -v AFN="$nosuffix" '{ print $0 > sprintf("%s_%03d.trad",AFN,NR) }' $1
 

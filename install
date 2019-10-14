@@ -1,12 +1,14 @@
 #!/bin/bash
 
-chmod a+x *.sh
-SHFILE=`ls *.sh`
+CURRDIR=`pwd`
+INSTDIR=r'/usr/bin/'
+CALIGNDIR='/cygdrive/c/User/chain/Download/CALIGN/'
+
+chmod a+x *.sh *.py
+SHFILE=`ls *.sh *.py`
 
 for f in $SHFILE;
 do
     echo "Installing $f..."
-    ln -s `pwd`/$f /usr/bin/$f
+    ln -s $CURRDIR/$f $INSTDIR/$f
 done
-
-chmod a+x *.sh
