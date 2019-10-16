@@ -379,7 +379,7 @@ def ipa_tier(wordtier, phonetier):
 #處理第五層 IU/Syllable (CGVN)層
 
 def get_cgvn(sampa, text):
-    return sampa.loc[sampa['SAMPA'] == text]['CGVN'].to_string(index = False).strip()
+    return sampa.loc[sampa['IPA'] == text]['CGVN'].to_string(index = False).strip()
 
 def cgvn_tier(wordtier, phonetier):
     et = phonetier.end_time
@@ -502,7 +502,7 @@ def textgrid_main(txtgridf):
     etier = english_tier(wordtier, phonetier, ctext)
     postier = pos_tier(wordtier, phonetier)
     ipatier = ipa_tier(wordtier, phonetier)
-    cgtier = cgvn_tier(wordtier, phonetier)
+    cgtier = cgvn_tier(wordtier, ipatier)
     ttier = tone_tier(wordtier, phonetier)
 
     typetier = tgt.core.IntervalTier(st, et, "EU/Type")
