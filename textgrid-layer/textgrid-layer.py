@@ -359,8 +359,9 @@ def ipa_tier(wordtier, phonetier):
                     continue
                 if resultlist[j] == '_':
                     i = i + 1
-                    prevann.endtime = annplus1.end_time
-                    continue
+                    newann = tgt.core.Annotation(prevann.start_time, annplus1.end_time, prevann.text)
+                    ipatier.delete_annotation_by_start_time(prevann.start_time)
+                    ipatier.add_annotation(newann)
                 else:
                     ann = annlist[i]
                     newann = tgt.core.Annotation(ann.start_time, ann.end_time, resultlist[j])
