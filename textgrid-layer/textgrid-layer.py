@@ -379,7 +379,7 @@ def ipa_tier(wordtier, phonetier):
 #處理第五層 IU/Syllable (CGVN)層
 
 def get_cgvn(sampa, text):
-    return sampa.loc[sampa['IPA'] == text]['CGVN'].to_string(index = False).strip()
+    return sampa.loc[sampa['IPA2'] == text]['CGVN2'].to_string(index = False).strip()
 
 def cgvn_tier(wordtier, phonetier):
     et = phonetier.end_time
@@ -393,10 +393,9 @@ def cgvn_tier(wordtier, phonetier):
             #print(ann.text)
             cgvnstr = ''
             for p in pholist:
-                if is_sampa_notation(sampadict, p.text):
-                    cgvn = get_cgvn(sampadict, p.text)
-                    print(p.text, cgvn)
-                    cgvnstr = cgvnstr + cgvn
+                cgvn = get_cgvn(sampadict, p.text)
+                print(p.text, cgvn)
+                cgvnstr = cgvnstr + cgvn
         elif ann.text == "sp":
             cgvnstr = "sp"
         else:
