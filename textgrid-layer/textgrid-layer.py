@@ -469,6 +469,18 @@ def tone_tier(wordtier, phonetier):
     print(to1tier)
     return to1tier
 
+#第八層 copy word tier 然後把所有字拿掉
+def eutype_tier(wordtier, phonetier):
+    et = phonetier.end_time
+    st = phonetier.start_time    
+    eutier = tgt.core.IntervalTier(st, et, "EU/Type")
+    
+    for ann in wordtier._objects:
+        newann = tgt.core.Annotation(ann.start_time, ann.end_time, '')
+        eutier.add_annotation(newann)
+        
+    print(eutier)
+    return eutier
 
 # In[12]:
 
@@ -503,8 +515,7 @@ def textgrid_main(txtgridf):
     ipatier = ipa_tier(wordtier, phonetier)
     cgtier = cgvn_tier(wordtier, ipatier)
     ttier = tone_tier(wordtier, phonetier)
-
-    typetier = tgt.core.IntervalTier(st, et, "EU/Type")
+    typetier = eutype_tier(wordtier, phonetier)
     #newtg.add_tier(typetier)
 
     subjecttier = tgt.core.IntervalTier(st, et, "Subject")
