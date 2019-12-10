@@ -12,10 +12,10 @@ do
     i=${ii//\//\\\\}
     #i=`echo $$i|sed 's/\\/\//g'`
     echo $i
-    txtfile=${i::-4}.txt
+    txtfile=${i::-4}.brk
     txtgrid=${i::-4}.textgrid
     pushd . > /dev/null
-    echo python3 Calign-Cygwin.py $i $txtfile $txtgrid
-    python3 Calign-Cygwin.py $i $txtfile $txtgrid
+    echo python3 Calign.py $i $txtfile $txtgrid
+    python3 Calign.py $i $txtfile $txtgrid
     popd > /dev/null
 done

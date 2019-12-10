@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 """ Usage:
-    python3 textfrid_layer.py textgrid_file
+    python3 textfrid_layer.py directory
     
-    This file takes the 2-tier textgrid file output from FA and output 11-tier txtgrid file
-    textgrid_file: The textgrid file from FA
+    This file takes a directory, process all .textgrid file and output output 12-tier txtgrid file
+    directory: the directory that want to processed
     
-    The output is textgrid_file+".11"
+    The output is textgrid_file+".12"
 """
 
 from __future__ import print_function, division
@@ -309,7 +309,7 @@ def get_result_len(x):
 def ipa_tier(wordtier, phonetier):
     et = phonetier.end_time
     st = phonetier.start_time
-    ipatier = tgt.core.IntervalTier(st, et, "IPA")
+    ipatier = tgt.core.IntervalTier(st, et, "IU/phone")
 
     wet = wordtier.end_time
     wst = wordtier.start_time
@@ -384,7 +384,7 @@ def get_cgvn(sampa, text):
 def cgvn_tier(wordtier, phonetier):
     et = phonetier.end_time
     st = phonetier.start_time
-    cgvntier = tgt.core.IntervalTier(st, et, "EU/syllable")
+    cgvntier = tgt.core.IntervalTier(st, et, "IU/syllable")
     for ann in wordtier._objects:
         newann = tgt.core.Annotation(ann.start_time, ann.end_time, "")
         if contains_chinese(ann.text):
@@ -449,7 +449,7 @@ def to_tone(phone):
 def tone_tier(wordtier, phonetier):
     et = phonetier.end_time
     st = phonetier.start_time    
-    to1tier = tgt.core.IntervalTier(st, et,"IU/Tone")
+    to1tier = tgt.core.IntervalTier(st, et,"IU/tone")
 
     for ann in wordtier._objects:
         newann = tgt.core.Annotation(ann.start_time, ann.end_time, text="")
@@ -482,58 +482,108 @@ def eutype_tier(wordtier, phonetier):
     print(eutier)
     return eutier
 
+def subject_tier(wordtier, phonetier):
+    et = phonetier.end_time
+    st = phonetier.start_time    
+    subjtier = tgt.core.IntervalTier(st, et, "Subject")
+	
+    newann = tgt.core.Annotation(st, et, '#001AM_N')
+    subjtier.add_annotation(newann)
+    print(subjtier)
+    return subjtier
+	
 # In[12]:
 
 
 # Two tiers from original textgrid file
 import copy
+import glob
 
-def textgrid_main(txtgridf):
-    tg = read_txtgrid(txtgridf)
-    ophonetier = tg.get_tier_by_name('phone')
-    owordtier =  tg.get_tier_by_name('word')
+def textgrid_main(txtgridr):
+    print(txtgridr)
+    txtlist = glob.glob(txtgridr+"/*.textgrid")
+    print("File list", txtlist)
+    for txtgridf in txtlist:
+        tg = read_txtgrid(txtgridf)
+        ophonetier = tg.get_tier_by_name('phone')
+        owordtier =  tg.get_tier_by_name('word')
 
-    phonetier = ophonetier.get_copy_with_gaps_filled()
-    wordtier  = owordtier.get_copy_with_gaps_filled()
+        sampatier = ophonetier.get_copy_with_gaps_filled()
+        sampatier.name = "IU/SAMPA"
+        phonetier = ophonetier.get_copy_with_gaps_filled()
+        euphonetier = ophonetier.get_copy_with_gaps_filled()
+        euphonetier.name = "EU/phone"
+		
+        wordtier  = owordtier.get_copy_with_gaps_filled()
+        wordtier.name="Word"
 
-    remove_noises(phonetier)
-    remove_noises(wordtier)
+        remove_noises(phonetier)
+        remove_noises(wordtier)
 
-    filling_gaps(phonetier)
-    filling_gaps(wordtier)
+        filling_gaps(phonetier)
+        filling_gaps(wordtier)
 
-    align_tiers(wordtier, phonetier)
+        align_tiers(wordtier, phonetier)
 
-    st = wordtier.start_time
-    et = wordtier.end_time
+        st = wordtier.start_time
+        et = wordtier.end_time
 
-    newtg = tgt.core.TextGrid()
+        newtg = tgt.core.TextGrid()
 
-    (ctier, ctext) = chinese_tier(wordtier, phonetier)
-    etier = english_tier(wordtier, phonetier, ctext)
-    postier = pos_tier(wordtier, phonetier)
-    ipatier = ipa_tier(wordtier, phonetier)
-    cgtier = cgvn_tier(wordtier, ipatier)
-    ttier = tone_tier(wordtier, phonetier)
-    typetier = eutype_tier(wordtier, phonetier)
-    #newtg.add_tier(typetier)
+        (ctier, ctext) = chinese_tier(wordtier, phonetier)
+        etier = english_tier(wordtier, phonetier, ctext)
+        postier = pos_tier(wordtier, phonetier)
+        ipatier = ipa_tier(wordtier, phonetier)
+        icgtier = cgvn_tier(wordtier, ipatier)
+        ecgtier = icgtier.get_copy_with_gaps_filled()
+        ecgtier.name = "EU/syllable"
+		
+        ttier = tone_tier(wordtier, phonetier)
+        typetier = eutype_tier(wordtier, phonetier)
+        #newtg.add_tier(typetier)
 
-    subjecttier = tgt.core.IntervalTier(st, et, "Subject")
-    #newtg.add_tier(subjecttier)
+        subjecttier = subject_tier(wordtier, phonetier)
+        #newtg.add_tier(subjecttier)
 
-    newtg.add_tier(ctier)
-    newtg.add_tier(etier)
-    newtg.add_tier(wordtier)
-    newtg.add_tier(phonetier)
-    #newtg.add_tier(postier)
-    newtg.add_tier(ipatier)
-    newtg.add_tier(cgtier)
-    newtg.add_tier(ttier)
-    newtg.add_tier(typetier)
-    newtg.add_tier(subjecttier)
+	#tier 1 Chinese tier
+        newtg.add_tier(ctier)
+		
+	#tier 2 English tier
+        newtg.add_tier(etier)
+		
+	# Tier 3 word tier
+        newtg.add_tier(wordtier)
+        
+	# Tier 4 IU/SAMPA tier
+        newtg.add_tier(sampatier)
+		
+	# Tier 5 phone tier
+        newtg.add_tier(ipatier)	
 
-    write_txtgrid(newtg, txtgridf+".11")
+	#Tier 6 IU/syllable (CGVN) tier 
+        newtg.add_tier(icgtier)
+		
+	#Tier 7 IU/tone tier
+        newtg.add_tier(ttier)
+		
+	#Tier 8 EU/phone tier
+        newtg.add_tier(euphonetier)
+		
+	#Tier 9 EU/tone (syllable) tier
+        newtg.add_tier(ecgtier)
+		
+	#Tier 10 EU/tone tier
+        ettier = ttier.get_copy_with_gaps_filled()
+        ettier.name="EU/tone"
+        newtg.add_tier(ettier)
+		
+	#Tier 11: EU/type type tier
+        newtg.add_tier(typetier)
+		
+	#Tier 12: Subject Tier
+        newtg.add_tier(subjecttier)
 
+        write_txtgrid(newtg, txtgridf+".12")
 
 # In[13]:
 
@@ -545,8 +595,8 @@ def main():
         print(__doc__)
         sys.exit(-1)
     else:
-        txtgridf = sys.argv[1]
-        textgrid_main(txtgridf)
+        txtgridr = sys.argv[1]
+        textgrid_main(txtgridr)
         
 if __name__ == "__main__":
     main()

@@ -25,8 +25,6 @@ from subprocess import check_output
 HOMEDIR='.'
 MODEL_DIR = HOMEDIR + '/model'
 
-missing = io.open('MissingWords', 'w', encoding='utf8')
-
 def prep_mlf(trsfile, tmpbase):
 
     f = codecs.open(tmpbase + '.dict', 'r', 'utf-8')
@@ -208,6 +206,7 @@ if __name__ == '__main__':
 
         # get the three mandatory arguments
         wavfile, trsfile, outfile = args
+        missing = io.open(wavfile[:-4]+'.MissingWords', 'w', encoding='utf8')
         # get options
         sr_override = getopt2("-r", opts)
         wave_start = getopt2("-s", opts, "0.0")
@@ -244,8 +243,8 @@ if __name__ == '__main__':
             os.system('cp -f ' + wavfile + ' ' + tmpbase + '.wav') 
  
     #prepare plpfile
-    print('../HTK-CYG/HCopy -C ' + MODEL_DIR + '/' + str(SR) + '/config ' + tmpbase + '.wav ' + tmpbase + '.plp')
-    os.system('../HTK-CYG/HCopy -C ' + MODEL_DIR + '/' + str(SR) + '/config ' + tmpbase + '.wav ' + tmpbase + '.plp')
+    print('../HTK/HCopy -C ' + MODEL_DIR + '/' + str(SR) + '/config ' + tmpbase + '.wav ' + tmpbase + '.plp')
+    os.system('../HTK/HCopy -C ' + MODEL_DIR + '/' + str(SR) + '/config ' + tmpbase + '.wav ' + tmpbase + '.plp')
 
     #prepare mlfile and dictionary
     if dict_alone:
@@ -280,8 +279,8 @@ if __name__ == '__main__':
         missing.write(u'Missing: ' + unk + '\n')
     
     #run alignment
-    print('../HTK-CYG/HVite -A -T 1 -a -m -t 10000.0 10000.0 100000.0 -I ' + tmpbase + '.mlf -H ' + MODEL_DIR + '/' + str(SR) + '/macros -H ' + MODEL_DIR + '/' + str(SR) + '/hmmdefs -i ' + tmpbase + '.aligned' + ' ' + MODEL_DIR + '/dict ' + MODEL_DIR + '/monophones ' + tmpbase + '.plp')
-    os.system('../HTK-CYG/HVite -A  -T 1 -a -m -t 10000.0 10000.0 100000.0 -I ' + tmpbase + '.mlf -H ' + MODEL_DIR + '/' + str(SR) + '/macros -H ' + MODEL_DIR + '/' + str(SR) + '/hmmdefs -i ' + tmpbase + '.aligned' + ' ' + MODEL_DIR + '/dict ' + MODEL_DIR + '/monophones ' + tmpbase + '.plp')
+    print('../HTK/HVite -A -T 1 -a -m -t 10000.0 10000.0 100000.0 -I ' + tmpbase + '.mlf -H ' + MODEL_DIR + '/' + str(SR) + '/macros -H ' + MODEL_DIR + '/' + str(SR) + '/hmmdefs -i ' + tmpbase + '.aligned' + ' ' + MODEL_DIR + '/dict ' + MODEL_DIR + '/monophones ' + tmpbase + '.plp')
+    os.system('../HTK/HVite -A  -T 1 -a -m -t 10000.0 10000.0 100000.0 -I ' + tmpbase + '.mlf -H ' + MODEL_DIR + '/' + str(SR) + '/macros -H ' + MODEL_DIR + '/' + str(SR) + '/hmmdefs -i ' + tmpbase + '.aligned' + ' ' + MODEL_DIR + '/dict ' + MODEL_DIR + '/monophones ' + tmpbase + '.plp')
     #HVITECONVCMD = '../HTK/HVite -A  -T 1 -a -m -t 10000.0 10000.0 100000.0 -I ' + tmpbase + '.mlf -H ' + MODEL_DIR + '/' + str(SR) + '/macros -H ' + MODEL_DIR + '/' + str(SR) + '/hmmdefs -i ' + tmpbase + '.aligned' + ' ' + tmpbase + '.dict ' + MODEL_DIR + '/monophones ' + tmpbase + '.plp'
     #try:
     #    out_bytes = check_output(HVITECONVCMD, shell = True)
