@@ -186,6 +186,8 @@ def chinese_tier(wordtier, phonetier):
             ctext = ctext + " " + a.text + " "
 
     #print(ctext)
+    ctext = ctext.replace('~', '')
+    ctext = ctext.replace('^', '')
     ctier = tgt.core.IntervalTier(st, et, u"IU")
     cann = tgt.core.Annotation(st,et, ctext)
     ctier.add_annotation(cann)
@@ -218,6 +220,16 @@ def english_tier(wordtier, phonetier, ctext):
 
 # In[8]:
 
+def new_word_tier(wordtier, phonetier):
+    et = wordtier.end_time
+    st = wordtier.start_time
+    
+    newtier = tgt.core.IntervalTier(st, et, "Word")
+    for ann in wordtier._objects:
+        newtext = ann.text.replace('~','').replace('^','')
+        newann = tgt.core.Annotation(ann.start_time, ann.end_time, text=newtext)
+        newtier.add_annotation(newann)
+    return newtier
 
 # 處理第三層 加入詞意層
 
@@ -453,14 +465,20 @@ def tone_tier(wordtier, phonetier):
 
     for ann in wordtier._objects:
         newann = tgt.core.Annotation(ann.start_time, ann.end_time, text="")
-        if (contains_chinese(ann.text)):
-            if is_in_dict(cdict, ann.text):
-                phone = get_phone(cdict, ann.text)
+        xanntext = ann.text.replace('~','').replace('^','').replace(' ','')
+        if (contains_chinese(xanntext)):
+            if is_in_dict(cdict, xanntext):
+                phone = get_phone(cdict, xanntext)
                 newann.text = to_tone(phone)
-                print(ann.text, phone, newann.text)
-            #else:
-            #    for c in ann.text:
-                
+            else:
+                print(xanntext, "IS NOT in DICT") 
+                p = ''
+                for c in xanntext:
+                    phone = get_phone(cdict, c) 
+                    p = p + to_tone(phone)
+                newann.text = p
+            print(xanntext, phone, newann.text)
+
         elif ann.text == "sp":
             newann.text = "sp"
 
@@ -476,7 +494,12 @@ def eutype_tier(wordtier, phonetier):
     eutier = tgt.core.IntervalTier(st, et, "EU/Type")
     
     for ann in wordtier._objects:
-        newann = tgt.core.Annotation(ann.start_time, ann.end_time, '')
+        if '~' in ann.text:
+            newann = tgt.core.Annotation(ann.start_time, ann.end_time, '~')
+        elif '^' in ann.text :
+            newann = tgt.core.Annotation(ann.start_time, ann.end_time, '^')
+        else:
+            newann = tgt.core.Annotation(ann.start_time, ann.end_time, '')
         eutier.add_annotation(newann)
         
     print(eutier)
@@ -501,7 +524,7 @@ import glob
 
 def textgrid_main(txtgridr):
     print(txtgridr)
-    txtlist = glob.glob(txtgridr+"/*.textgrid")
+    txtlist = glob.glob(txtgridr+"/*.TextGrid")
     print("File list", txtlist)
     for txtgridf in txtlist:
         tg = read_txtgrid(txtgridf)
@@ -510,9 +533,8 @@ def textgrid_main(txtgridr):
 
         sampatier = ophonetier.get_copy_with_gaps_filled()
         sampatier.name = "IU/SAMPA"
+		
         phonetier = ophonetier.get_copy_with_gaps_filled()
-        euphonetier = ophonetier.get_copy_with_gaps_filled()
-        euphonetier.name = "EU/phone"
 		
         wordtier  = owordtier.get_copy_with_gaps_filled()
         wordtier.name="Word"
@@ -533,17 +555,23 @@ def textgrid_main(txtgridr):
         (ctier, ctext) = chinese_tier(wordtier, phonetier)
         etier = english_tier(wordtier, phonetier, ctext)
         postier = pos_tier(wordtier, phonetier)
+        nwordtier = new_word_tier(wordtier, phonetier)
         ipatier = ipa_tier(wordtier, phonetier)
         icgtier = cgvn_tier(wordtier, ipatier)
         ecgtier = icgtier.get_copy_with_gaps_filled()
         ecgtier.name = "EU/syllable"
 		
-        ttier = tone_tier(wordtier, phonetier)
+        euphonetier = copy.deepcopy(sampatier)
+        euphonetier.name = "EU/phone"		
+        
+        ttier = tone_tier(nwordtier, phonetier)
         typetier = eutype_tier(wordtier, phonetier)
         #newtg.add_tier(typetier)
 
         subjecttier = subject_tier(wordtier, phonetier)
         #newtg.add_tier(subjecttier)
+
+        # Construct contents
 
 	#tier 1 Chinese tier
         newtg.add_tier(ctier)
@@ -551,8 +579,8 @@ def textgrid_main(txtgridr):
 	#tier 2 English tier
         newtg.add_tier(etier)
 		
-	# Tier 3 word tier
-        newtg.add_tier(wordtier)
+	# Tier 3 new word tier
+        newtg.add_tier(nwordtier)
         
 	# Tier 4 IU/SAMPA tier
         newtg.add_tier(sampatier)
