@@ -27,6 +27,7 @@ import glob
 import tgt
 from googletrans import Translator
 import itertools
+import time
 
 #讀入 EHowNet
 from ehownet_python3 import *
@@ -433,7 +434,13 @@ def thai14_main(txtgridr):
     print("File list", txtlist)
     #translator = Translator()
     #print(translator)
+    idx = 0
     for txtgridf in txtlist:
+        if idx % 10 == 0:
+            time.sleep(10)
+        else:
+            time.sleep(2)
+        idx = idx + 1
         tg = tgt.io.read_textgrid(txtgridf, encoding='utf-8', include_empty_intervals=True)
         iuteacher, wordteacher, iustudent, wordstudent = parse_tiers(tg)
         #print(iuteacher)
