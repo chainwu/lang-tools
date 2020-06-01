@@ -432,7 +432,7 @@ def thai14_main(txtgridr):
     #print(txtgridr)
     txtlist = glob.glob(txtgridr+"/*.TextGrid")
     print("File list", txtlist)
-    #translator = Translator()
+    translator = Translator()
     #print(translator)
     idx = 0
     for txtgridf in txtlist:
@@ -464,6 +464,7 @@ def thai14_main(txtgridr):
         new_iu_syllable = syllable_tier(wordteacher, new_iu_phone, "IU/syllable", zdf)
         new_iu_tone = tone_tier(wordteacher, "IU/tone")
         new_iu_student = iu_tier(iustudent, wordstudent, "IU/student")
+        time.sleep(2)
         new_english_student = english_tier(new_iu_student, "English/student")
         new_word_student = word_tier(wordstudent, "Word/student")
         new_eu_phone = phone_tier(wordstudent, "IU/student", zdf)
