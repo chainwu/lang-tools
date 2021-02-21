@@ -144,11 +144,12 @@ def contains_chinese(check_str):
     :param check_str: {str} 需要检测的字符串
     :return: {bool} 包含返回True， 不包含返回False
     """
+
     for ch in check_str:
         if u'\u4e00' <= ch <= u'\u9fff':
             return True
-    return False
 
+    return False
 
 # In[5]:
 
@@ -179,15 +180,18 @@ def chinese_tier(wordtier, phonetier):
     ctext = ""
 
     for a in annlist:
-        if (contains_chinese(a.text)):
-            ctext = ctext + a.text
+        atext = a.text.replace("~","")
+        atext = atext.replace("^","") 
+        atext = atext.replace(" ","")
+        if (contains_chinese(atext)):
+            ctext = ctext + atext
             # print(a.text)
         else:
-            ctext = ctext + " " + a.text + " "
+            ctext = ctext + " " + atext + " "
 
     #print(ctext)
-    ctext = ctext.replace('~', '')
-    ctext = ctext.replace('^', '')
+    #ctext = ctext.replace('~', '')
+    #ctext = ctext.replace('^', '')
     ctier = tgt.core.IntervalTier(st, et, u"IU")
     cann = tgt.core.Annotation(st,et, ctext)
     ctier.add_annotation(cann)
@@ -199,11 +203,13 @@ def chinese_tier(wordtier, phonetier):
 # In[7]:
 
 
-# 處理第二層英文層
+# 處理第二 層英文層
 
 from googletrans import Translator
+import time
 
 def english_tier(wordtier, phonetier, ctext):
+    time.sleep(2)
     et = wordtier.end_time
     st = wordtier.start_time
     
@@ -240,18 +246,21 @@ def pos_tier(wordtier, phonetier):
 
     for ann in wordtier._objects: 
         newann = tgt.core.Annotation(ann.start_time, ann.end_time, text=" ")
-        if (contains_chinese(ann.text)): 
+        anntext = ann.text.replace("~","")
+        anntext = anntext.replace("^","")
+        anntext = anntext.replace(" ","")
+        if (contains_chinese(anntext)): 
             newannstr = ""
             #去 EHowNet 查詞性
-            posp=EHowTree.searchWord(ann.text)
-            print(ann.text, posp)
+            posp=EHowTree.searchWord(anntext)
+            print(anntext, posp)
             if posp:
                 for w in posp:
                     #print(w.pos)
                     newannstr = newannstr + w.pos + " "
                 #print(node)
                 newann.text = newannstr.rstrip()
-        elif ann.text == 'sp':
+        elif anntext == 'sp':
             newann.text = 'sp'
             #print(newannstr)
             #print(c, "[", newann.start_time, newann.end_time, "]", ss)
@@ -561,7 +570,7 @@ def textgrid_main(txtgridr):
         ecgtier = icgtier.get_copy_with_gaps_filled()
         ecgtier.name = "EU/syllable"
 		
-        euphonetier = copy.deepcopy(sampatier)
+        euphonetier = copy.deepcopy(ipatier)
         euphonetier.name = "EU/phone"		
         
         ttier = tone_tier(nwordtier, phonetier)
@@ -580,7 +589,7 @@ def textgrid_main(txtgridr):
         newtg.add_tier(etier)
 		
 	# Tier 3 new word tier
-        newtg.add_tier(nwordtier)
+        newtg.add_tier(postier)
         
 	# Tier 4 IU/SAMPA tier
         newtg.add_tier(sampatier)

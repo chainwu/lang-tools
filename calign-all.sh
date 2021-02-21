@@ -10,9 +10,9 @@ ALLWAV=`ls $1/*.wav`
 for ii in $ALLWAV;
 do
     i=${ii//\//\\\\}
-    #i=`echo $$i|sed 's/\\/\//g'`
+#    i=`echo $$ii|sed 's/\\/\//g'`
     echo $i
-    txtfile=${i::-4}.brk
+    txtfile=${i::-4}.txt
     txtgrid=${i::-4}.textgrid
     pushd . > /dev/null
     echo python3 Calign.py $i $txtfile $txtgrid

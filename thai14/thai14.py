@@ -263,9 +263,16 @@ def iu_tier(iut, wt, name):
 def english_tier(iut, name, translator):
     et_tier = copy.deepcopy(iut)
     et_tier.name = name
+    idx = 0
     for a in et_tier._objects:
         if (contains_chinese(a.text)): 
             print("Contains chinese:", a.text)
+            # Need to add sleep here
+            idx = idx + 1
+            if idx % 10 == 0:
+               time.sleep(10)
+            else:
+               time.sleep(2)
             tr = translator.translate(a.text, dest = 'en')
             a.text = tr.text
         else:
@@ -465,7 +472,7 @@ def thai14_main(txtgridr):
         new_iu_tone = tone_tier(wordteacher, "IU/tone")
         new_iu_student = iu_tier(iustudent, wordstudent, "IU/student")
         time.sleep(2)
-        new_english_student = english_tier(new_iu_student, "English/student")
+        new_english_student = english_tier(new_iu_student, "English/student", translator)
         new_word_student = word_tier(wordstudent, "Word/student")
         new_eu_phone = phone_tier(wordstudent, "IU/student", zdf)
         new_eu_syllable = syllable_tier(wordstudent, new_eu_phone, "EU/syllable", zdf)

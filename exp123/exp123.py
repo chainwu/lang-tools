@@ -5,7 +5,7 @@ import pandas as pd
 
 #zdf = pd.DataFrame()
 
-def read_zhuyin2upa_table():
+def read_zhuyin2ipa_table():
     zdf = pd.read_excel("zhuyin2ipa.xlsx")
     return zdf
 
@@ -212,35 +212,35 @@ def excel_page1(zdf):
 
 def excel_page2(zdf):
     # to read just one sheet to dataframe:
-    df = pd.read_excel('exp123.xlsx', sheet_name="實驗二", index_col=0, head=0)
-    col = df.columns.values
-    row = df.index.values
+   df = pd.read_excel('exp123.xlsx', sheet_name="實驗二", index_col=0, head=0)
+   col = df.columns.values
+   row = df.index.values
 
-    newdf = page12_process(df, zdf, col, row)
-    newdf.to_excel('實驗二.xlsx')
+   newdf = page12_process(df, zdf, col, row)
+   newdf.to_excel('實驗二.xlsx')
 
 
 from pypinyin import pinyin, lazy_pinyin, Style
 
-def excel_page3(zdf):
-    df = pd.read_excel('exp123.xlsx', sheet_name="實驗三(女)",index_col=0, head=0)
-    newdf = chine2ipa(df, zdf)
-    newdf.to_excel('實驗三(女).xlsx')
+#def excel_page3(zdf):
+    #df = pd.read_excel('exp123.xlsx', sheet_name="實驗三(女)",index_col=0, head=0)
+    #newdf = chine2ipa(df, zdf)
+    #newdf.to_excel('實驗三(女).xlsx')
 
 
-def excel_page4(zdf):
-    df = pd.read_excel('exp123.xlsx', sheet_name="實驗三(男)",index_col=0, head=0)
-    newdf = chine2ipa(df, zdf)
-    newdf.to_excel('實驗三(男).xlsx')
+#def excel_page4(zdf):
+    #df = pd.read_excel('exp123.xlsx', sheet_name="實驗三(男)",index_col=0, head=0)
+    #newdf = chine2ipa(df, zdf)
+    #newdf.to_excel('實驗三(男).xlsx')
 
 def main():
-    zdf = read_zhuyin2upa_table()
+    zdf = read_zhuyin2ipa_table()
     excel_page1(zdf)
     excel_page2(zdf)
-#    print(zhuyin2ipa(zdf, 'ㄒㄩ'))
+    print(zhuyin2ipa(zdf, 'ㄒㄩ'))
 
-    excel_page3(zdf)
-    excel_page4(zdf)
+    #excel_page3(zdf)
+    #excel_page4(zdf)
     
 if __name__ == '__main__':
     main()  # 或是任何你想執行的函式
