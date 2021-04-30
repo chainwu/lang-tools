@@ -398,6 +398,23 @@ def ipa_tier(wordtier, phonetier):
 
 
 #處理第五層 IU/Syllable (CGVN)層
+import itertools
+cgvn_pattern=['V', 'VN', 'NV', 'CV', 'GV', 'VG', 'CGV', 'GVN', 'GVG', 'CVG', 'CVN', 'CGVG', 'CGVN']
+
+def cgvn_split(cgvnstr, clist):
+    if cgvnstr == "":
+        clist.insert(0, "*")
+        #print(clist)
+        return True
+    else:
+        match = False
+        for ptn in cgvn_pattern:
+            #print("Testing pattern ", ptn, "with ", cgvnstr)
+            if cgvnstr.startswith(ptn):
+                if cgvn_split(cgvnstr[len(ptn):], clist):
+                    clist.insert(0, ptn)
+                    match = True
+        return match
 
 def get_cgvn(sampa, text):
     return sampa.loc[sampa['IPA2'] == text]['CGVN2'].to_string(index = False).strip()
@@ -406,8 +423,11 @@ def cgvn_tier(wordtier, phonetier):
     et = phonetier.end_time
     st = phonetier.start_time
     cgvntier = tgt.core.IntervalTier(st, et, "IU/syllable")
+    cgvnstartier = tgt.core.IntervalTier(st, et, "IU/syllable/*")
     for ann in wordtier._objects:
         newann = tgt.core.Annotation(ann.start_time, ann.end_time, "")
+        newstarann = tgt.core.Annotation(ann.start_time, ann.end_time, "")
+        cgvnsplit=""
         if contains_chinese(ann.text):
             #詞含有中文，抓出音來
             pholist = phonetier.get_annotations_between_timepoints(ann.start_time, ann.end_time)
@@ -417,14 +437,27 @@ def cgvn_tier(wordtier, phonetier):
                 cgvn = get_cgvn(sampadict, p.text)
                 print(p.text, cgvn)
                 cgvnstr = cgvnstr + cgvn
+            clist=[]
+            cgvn_split(cgvnstr, clist)
+            splist = [list(y) for x, y in itertools.groupby(clist, lambda z: z == "*") if not x]
+            if len(splist) != 1:
+                cgvnsplit="*"
+            cgvn=""
+            for j in splist:
+                listToStr = ' '.join([str(elem) for elem in j])
+                cgvn = cgvn+listToStr+" | "
+            cgvnstr=cgvn[:-3]
         elif ann.text == "sp":
             cgvnstr = "sp"
         else:
             cgvnstr = ""
+        
         newann.text = cgvnstr
+        newstarann.text=cgvnsplit
         cgvntier.add_annotation(newann)
+        cgvnstartier.add_annotation(newstarann)
     
-    return cgvntier
+    return (cgvntier, cgvnstartier)
 
 #cgvn_tier(wordtier, phonetier)
 
@@ -566,7 +599,7 @@ def textgrid_main(txtgridr):
         postier = pos_tier(wordtier, phonetier)
         nwordtier = new_word_tier(wordtier, phonetier)
         ipatier = ipa_tier(wordtier, phonetier)
-        icgtier = cgvn_tier(wordtier, ipatier)
+        (icgtier, cgstartier) = cgvn_tier(wordtier, ipatier)
         ecgtier = icgtier.get_copy_with_gaps_filled()
         ecgtier.name = "EU/syllable"
 		
@@ -589,6 +622,7 @@ def textgrid_main(txtgridr):
         newtg.add_tier(etier)
 		
 	# Tier 3 new word tier
+        newtg.add_tier(owordtier)
         newtg.add_tier(postier)
         
 	# Tier 4 IU/SAMPA tier
@@ -599,7 +633,8 @@ def textgrid_main(txtgridr):
 
 	#Tier 6 IU/syllable (CGVN) tier 
         newtg.add_tier(icgtier)
-		
+        newtg.add_tier(cgstartier)
+        
 	#Tier 7 IU/tone tier
         newtg.add_tier(ttier)
 		
