@@ -18,7 +18,7 @@ from ehownet_python3 import *
 def read_databases():
     try:
         #讀入字典
-        cdict = pd.read_excel('cdict_cond.xlsx')
+        cdict = pd.read_excel('cdict_cond.csv')
         #cdict.drop_duplicates(subset = None, keep = "last", inplace = True)
         #print(dict)
         
@@ -27,7 +27,7 @@ def read_databases():
         #print(dict)
     
         # 讀入 SAMPA 
-        sampadict = pd.read_excel('sampa_revised.xlsx')
+        sampadict = pd.read_excel('sampa_revised.xls')
         #print(sampadict)
         return(cdict, EHowTree, sampadict)
     except Exception as e:
