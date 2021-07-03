@@ -18,7 +18,7 @@ from ehownet_python3 import *
 def read_databases():
     try:
         #讀入字典
-        cdict = pd.read_excel('cdict_cond.csv')
+        cdict = pd.read_csv('cdict_cond.csv')
         #cdict.drop_duplicates(subset = None, keep = "last", inplace = True)
         #print(dict)
         
@@ -569,6 +569,7 @@ def textgrid_main(txtgridr):
     txtlist = glob.glob(txtgridr+"/*.TextGrid")
     print("File list", txtlist)
     for txtgridf in txtlist:
+        print("Processing", txtgridf)
         tg = read_txtgrid(txtgridf)
         ophonetier = tg.get_tier_by_name('phone')
         owordtier =  tg.get_tier_by_name('word')
