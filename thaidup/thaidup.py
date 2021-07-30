@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 #!/usr/bin/env python3
@@ -17,7 +17,7 @@
 """
 
 
-# In[1]:
+# In[2]:
 
 
 def contains_chinese(check_str):
@@ -38,7 +38,7 @@ def listprint(l):
     print(" ", end="")
 
 
-# In[20]:
+# In[3]:
 
 
 import tgt
@@ -73,14 +73,19 @@ def thaidup_main(txtgridr):
                         break
                 if match:
                     checked_term.append(a.text)
-                    dur = 0
+                    #dur = 0
                     cnt = 0
                     for c in tier1._objects:
                         if c.text == a.text:
-                            #print(c)
                             cnt = cnt + 1
-                            dur = dur + (c.end_time - c.start_time)
-                    print("token", cnt, ",", (dur / cnt) * 1000, "msec", end=" ")
+                    print("token", cnt, ",", end=" ")
+
+                    #-----------------
+                    for c in tier1._objects:
+                        if c.text == a.text:
+                            print((c.end_time - c.start_time)*1000, " msec, ", end=" ")
+#                   print("token", cnt, ",", end=" ")
+    
                     a3 = tier3.get_annotations_between_timepoints(a.start_time, a.end_time)
                     a4 = tier4.get_annotations_between_timepoints(a.start_time, a.end_time)
                     a5 = tier5.get_annotations_between_timepoints(a.start_time, a.end_time)
@@ -91,19 +96,27 @@ def thaidup_main(txtgridr):
                     print("Tier6=", end=""), listprint(a6)
                     print(";", end=" ")
                     
-                    dur = 0
                     cnt = 0
                     for d in tier7._objects:
                         if d.text == a.text:
                             cnt = cnt + 1
-                            dur = dur + (d.end_time - d.start_time)
-                    print("Student: token", cnt, " ", dur/cnt * 1000, "ms")
+                    print("Student: token", cnt,  end=" ")
+                    for d in tier7._objects:
+                        if d.text == a.text:
+                            print((d.end_time-d.start_time) * 1000, "ms", end=" ")
+                    print()
 
 
-# In[22]:
+# In[4]:
 
 
-#haidup_main("06152018")
+thaidup_main("06152018")
+
+
+# In[5]:
+
+
+thaidup_main("06182018")
 
 
 # In[23]:
