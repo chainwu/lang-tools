@@ -399,11 +399,10 @@ def ipa_tier(wordtier, phonetier):
 
 #處理第五層 IU/Syllable (CGVN)層
 import itertools
-cgvn_pattern=['V', 'VN', 'NV', 'CV', 'GV', 'VG', 'CGV', 'GVN', 'GVG', 'CVG', 'CVN', 'NGV', 'NVN', 'NVG', 'CGVG', 'CGVN', 'NGVG']
 
+cgvn_pattern=['V', 'VN', 'NV', 'CV', 'GV', 'VG', 'CGV', 'GVN', 'GVG', 'CVG', 'CVN', 'NGV', 'NVN', 'NVG', 'CGVG', 'CGVN', 'NGVG', 'NGVN']
 c = list(set(cgvn_pattern))
 cgvn_pattern = sorted(c, key=len)
-
 
 def cgvn_split(cgvnstr, clist):
     if cgvnstr == "":
