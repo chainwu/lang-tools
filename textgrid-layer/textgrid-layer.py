@@ -209,17 +209,17 @@ from googletrans import Translator
 import time
 
 def english_tier(wordtier, phonetier, ctext):
-    time.sleep(2)
     et = wordtier.end_time
     st = wordtier.start_time
     
     translator = Translator()
-    tr = translator.translate(ctext, dest = 'en')
+    tr = translator.translate(ctext, dest = 'en', src='zh-tw')
     print (tr.text)
-
+    time.sleep(2)
+    
     etier = tgt.core.IntervalTier(st, et, "English")
     #add_text_tier(newtg, "English")
-    eann = tgt.core.Annotation(st, et,tr.text)
+    eann = tgt.core.Annotation(st, et, tr.text)
     etier.add_annotation(eann)
     return etier
 
@@ -399,7 +399,11 @@ def ipa_tier(wordtier, phonetier):
 
 #處理第五層 IU/Syllable (CGVN)層
 import itertools
-cgvn_pattern=['V', 'VN', 'NV', 'CV', 'GV', 'VG', 'CGV', 'GVN', 'GVG', 'CVG', 'CVN', 'NGV', 'NVN', 'NGV', 'CGVG', 'CGVN', 'NGVG', 'NGVG']
+cgvn_pattern=['V', 'VN', 'NV', 'CV', 'GV', 'VG', 'CGV', 'GVN', 'GVG', 'CVG', 'CVN', 'NGV', 'NVN', 'NVG', 'CGVG', 'CGVN', 'NGVG']
+
+c = list(set(cgvn_pattern))
+cgvn_pattern = sorted(c, key=len)
+
 
 def cgvn_split(cgvnstr, clist):
     if cgvnstr == "":
