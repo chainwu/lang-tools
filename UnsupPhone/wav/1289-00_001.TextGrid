@@ -1,0 +1,164 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3.049705 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "phone" 
+        xmin = 0 
+        xmax = 3.049705 
+        intervals: size = 25 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.0125 
+            text = "" 
+        intervals [2]:
+            xmin = 0.0125 
+            xmax = 0.052500000000000005 
+            text = "l" 
+        intervals [3]:
+            xmin = 0.052500000000000005 
+            xmax = 0.24250000000000002 
+            text = "U" 
+        intervals [4]:
+            xmin = 0.24250000000000002 
+            xmax = 0.3225 
+            text = "m" 
+        intervals [5]:
+            xmin = 0.3225 
+            xmax = 0.4825 
+            text = "e" 
+        intervals [6]:
+            xmin = 0.4825 
+            xmax = 0.5125 
+            text = "y" 
+        intervals [7]:
+            xmin = 0.5125 
+            xmax = 0.6525 
+            text = "x" 
+        intervals [8]:
+            xmin = 0.6525 
+            xmax = 0.6825 
+            text = "y" 
+        intervals [9]:
+            xmin = 0.6825 
+            xmax = 0.7925 
+            text = "a" 
+        intervals [10]:
+            xmin = 0.7925 
+            xmax = 0.8424999999999999 
+            text = "w" 
+        intervals [11]:
+            xmin = 0.8424999999999999 
+            xmax = 0.9624999999999999 
+            text = "j" 
+        intervals [12]:
+            xmin = 0.9624999999999999 
+            xmax = 0.9924999999999999 
+            text = "y" 
+        intervals [13]:
+            xmin = 0.9924999999999999 
+            xmax = 1.1325 
+            text = "E" 
+        intervals [14]:
+            xmin = 1.1325 
+            xmax = 1.2225 
+            text = "n" 
+        intervals [15]:
+            xmin = 1.2225 
+            xmax = 2.0325 
+            text = "sp" 
+        intervals [16]:
+            xmin = 2.0325 
+            xmax = 2.2025 
+            text = "C" 
+        intervals [17]:
+            xmin = 2.2025 
+            xmax = 2.2625 
+            text = "&" 
+        intervals [18]:
+            xmin = 2.2625 
+            xmax = 2.3325 
+            text = "n" 
+        intervals [19]:
+            xmin = 2.3325 
+            xmax = 2.4025000000000003 
+            text = "Z" 
+        intervals [20]:
+            xmin = 2.4025000000000003 
+            xmax = 2.5125 
+            text = "%" 
+        intervals [21]:
+            xmin = 2.5125 
+            xmax = 2.6125000000000003 
+            text = "f" 
+        intervals [22]:
+            xmin = 2.6125000000000003 
+            xmax = 2.7525000000000004 
+            text = "@" 
+        intervals [23]:
+            xmin = 2.7525000000000004 
+            xmax = 2.8925 
+            text = "n" 
+        intervals [24]:
+            xmin = 2.8925 
+            xmax = 3.0425 
+            text = "sp" 
+        intervals [25]:
+            xmin = 3.0425 
+            xmax = 3.049705 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "word" 
+        xmin = 0 
+        xmax = 3.049705 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.0125 
+            text = "" 
+        intervals [2]:
+            xmin = 0.0125 
+            xmax = 0.24250000000000002 
+            text = "旅" 
+        intervals [3]:
+            xmin = 0.24250000000000002 
+            xmax = 0.5125 
+            text = "美" 
+        intervals [4]:
+            xmin = 0.5125 
+            xmax = 0.8424999999999999 
+            text = "小" 
+        intervals [5]:
+            xmin = 0.8424999999999999 
+            xmax = 1.2225 
+            text = "簡" 
+        intervals [6]:
+            xmin = 1.2225 
+            xmax = 2.0325 
+            text = "sp" 
+        intervals [7]:
+            xmin = 2.0325 
+            xmax = 2.3325 
+            text = "陳" 
+        intervals [8]:
+            xmin = 2.3325 
+            xmax = 2.5125 
+            text = "之" 
+        intervals [9]:
+            xmin = 2.5125 
+            xmax = 2.8925 
+            text = "番" 
+        intervals [10]:
+            xmin = 2.8925 
+            xmax = 3.0425 
+            text = "sp" 
+        intervals [11]:
+            xmin = 3.0425 
+            xmax = 3.049705 
+            text = "" 
