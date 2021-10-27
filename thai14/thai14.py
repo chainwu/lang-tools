@@ -465,14 +465,14 @@ def thai14_main(txtgridr):
 
         #Construct tier contents
         new_iu_teacher = iu_tier(iuteacher, wordteacher, "IU/teacher") 
-        new_english_teacher = english_tier(new_iu_teacher, "English/teacher", translator) 
+        #new_english_teacher = english_tier(new_iu_teacher, "English/teacher", translator) 
         new_word_teacher = word_tier(wordteacher, "Word/teacher")
         new_iu_phone = phone_tier(wordteacher, "IU/phone", zdf)
         new_iu_syllable = syllable_tier(wordteacher, new_iu_phone, "IU/syllable", zdf)
         new_iu_tone = tone_tier(wordteacher, "IU/tone")
         new_iu_student = iu_tier(iustudent, wordstudent, "IU/student")
         time.sleep(2)
-        new_english_student = english_tier(new_iu_student, "English/student", translator)
+        #new_english_student = english_tier(new_iu_student, "English/student", translator)
         new_word_student = word_tier(wordstudent, "Word/student")
         new_eu_phone = phone_tier(wordstudent, "IU/student", zdf)
         new_eu_syllable = syllable_tier(wordstudent, new_eu_phone, "EU/syllable", zdf)
@@ -483,13 +483,13 @@ def thai14_main(txtgridr):
         # Construct textgrid
         newtg = tgt.core.TextGrid()        
         for nt in [new_iu_teacher, 
-                   new_english_teacher, 
+                   #new_english_teacher, 
                    new_word_teacher, 
                    new_iu_phone, 
                    new_iu_syllable, 
                    new_iu_tone, 
                    new_iu_student, 
-                   new_english_student,
+                   #new_english_student,
                    new_word_student, 
                    new_eu_phone, 
                    new_eu_syllable, 
